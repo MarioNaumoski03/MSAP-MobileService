@@ -38,6 +38,7 @@ public class MainActivity extends Activity {
     TextView txtJson;
     ProgressDialog pd;
     static String JSONString;
+    static JSONArray JArray;
     static String jsonstring;
     public static final String TAG= MainActivity.class.getSimpleName();
 
@@ -50,6 +51,7 @@ public class MainActivity extends Activity {
        // setContentView(R.layout.activity_main);
         //new yourDataTask().execute();
         new JsonTask().execute("http://10.0.2.2:5000/getjobs");
+        new PingTask().execute();
         //valueList=new ArrayList<>();
        // new getValues().execute();
 
@@ -208,6 +210,7 @@ public class MainActivity extends Activity {
                     Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
 
                 }
+
 JSONString=buffer.toString();
                 return buffer.toString();
 

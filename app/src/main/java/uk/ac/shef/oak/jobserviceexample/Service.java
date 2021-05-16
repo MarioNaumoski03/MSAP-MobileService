@@ -118,12 +118,14 @@ public class Service extends android.app.Service {
      */
     public void restartForeground() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            new PingTask().execute();
             Log.i(TAG, "restarting foreground");
             try {
                 Notification notification = new Notification();
                 startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "This is the service's notification", R.drawable.ic_sleep));
                 Log.i(TAG, "restarting foreground successful");
-                startTimer();
+
+                new PingTask().execute();
             } catch (Exception e) {
                 Log.e(TAG, "Error in notification " + e.getMessage());
             }
@@ -139,6 +141,7 @@ public class Service extends android.app.Service {
         Intent broadcastIntent = new Intent(Globals.RESTART_INTENT);
         sendBroadcast(broadcastIntent);
         stoptimertask();
+        new PingTask().execute();
     }
 
 
@@ -169,34 +172,45 @@ public class Service extends android.app.Service {
     private static TimerTask timerTask;
     long oldTime = 0;
 
-    public void startTimer() {
-        Log.i(TAG, "Starting timer");
-
-        //set a new Timer - if one is already running, cancel it to avoid two running at the same time
-        stoptimertask();
-        timer = new Timer();
-
-        //initialize the TimerTask's job
-        initializeTimerTask();
-
-        Log.i(TAG, "Scheduling...");
-        //schedule the timer, to wake up every 1 second
-        timer.schedule(timerTask, 1000, 1000); //
-    }
+//    public void startTimer() {
+//        Log.i(TAG, "Starting timer");
+//
+//        //set a new Timer - if one is already running, cancel it to avoid two running at the same time
+//        stoptimertask();
+//        timer = new Timer();
+//
+//        //initialize the TimerTask's job
+//        initializeTimerTask();
+//
+//        Log.i(TAG, "Scheduling...");
+//        //schedule the timer, to wake up every 1 second
+//        timer.schedule(timerTask, 1000, 1000); //
+//    }
 
     public void startTimerAsync(){
+        Log.i(TAG, "Starting timerAsync");
+        stoptimertask();
         Timer timer = new Timer();
         initializeTimerTask();
-        timer.schedule(timertask,1000,6000);
+        Log.i(TAG, "Scheduling...");
+        timer.schedule(timerTask,1000,1000);
     }
     /**
      * it sets the timer to print the counter every x seconds
      */
     public void initializeTimerTask() {
-        Log.i(TAG, "initialising TimerTask");
+        new PingTask().execute();
+        Log.i(TAG, "initializing TimerTask");
         timerTask = new TimerTask() {
             public void run() {
                 Log.i("in timer", "in timer ++++  " + (counter++));
+            }
+        };
+        timerTask =new TimerTask(){
+
+            @Override
+            public void run() {
+                new PingTask().execute();
             }
         };
     }

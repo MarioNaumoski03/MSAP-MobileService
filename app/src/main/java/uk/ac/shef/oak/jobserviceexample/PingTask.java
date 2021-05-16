@@ -22,7 +22,7 @@ public class PingTask extends AsyncTask<Void,Void,String> {
     @Override
     protected String doInBackground(Void... voids) {
         try {
-            Thread.sleep(600000);
+            Thread.sleep(6000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -51,6 +51,8 @@ public class PingTask extends AsyncTask<Void,Void,String> {
                 pingCmd = pingCmd + " -s " + currentItem.getString("packetSize");
                 pingCmd = pingCmd + " " + currentItem.getString("host");
                 String pingResult = "";
+                Log.d(TAG, "pingResult = " + pingResult);
+
                 Runtime r = Runtime.getRuntime();
                 Process p = r.exec(pingCmd);
                 BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
