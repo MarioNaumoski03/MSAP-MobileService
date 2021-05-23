@@ -30,6 +30,7 @@ public class Service extends android.app.Service {
     private int count=0;
     private TimerTask timertask;
     private SharedPreferences mPreferences;
+    private String sharedPrefFile = "uk.ac.shef.oak.jobserviceexample";
     private String RESPONSE_KEY = "response";
     public static String responseString = "";
 
@@ -46,6 +47,21 @@ public class Service extends android.app.Service {
             restartForeground();
         }
         mCurrentService = this;
+
+        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+
+        responseString = mPreferences.getString(RESPONSE_KEY,"");
+    }
+
+    public String dependString()
+    {
+        if(responseString == "")
+        {
+            return pingResult;
+        }
+        else{
+            return responseString;
+        }
     }
 
     @Override
@@ -211,6 +227,7 @@ public class Service extends android.app.Service {
             @Override
             public void run() {
                 new PingTask().execute();
+                new PostRequestAsync().execute(dependString());
             }
         };
     }
@@ -225,6 +242,8 @@ public class Service extends android.app.Service {
             timer = null;
         }
     }
+
+
 
     public static Service getmCurrentService() {
         return mCurrentService;

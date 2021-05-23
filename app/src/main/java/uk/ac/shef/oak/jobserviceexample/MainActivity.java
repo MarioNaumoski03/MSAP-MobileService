@@ -33,7 +33,7 @@ import uk.ac.shef.oak.jobserviceexample.restarter.RestartServiceBroadcastReceive
 
 public class MainActivity extends Activity {
 
-    public static String url="https://10.0.2.2:5000/getjobs";
+    public static String url="https://10.0.2.2:5000/getjobs/emulator";
     ArrayList<HashMap<String,String>> valueList;
     TextView txtJson;
     ProgressDialog pd;
@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
        // setContentView(R.layout.activity_main);
         //new yourDataTask().execute();
-        new JsonTask().execute("http://10.0.2.2:5000/getjobs");
+        new JsonTask().execute("http://10.0.2.2:5000/getjobs/emulator");
         new PingTask().execute();
         //valueList=new ArrayList<>();
        // new getValues().execute();
@@ -195,7 +195,9 @@ public class MainActivity extends Activity {
             try {
                 URL url = new URL(params[0]);
                 connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
                 connection.connect();
+                Log.d(TAG,"Connected");
 
 
                 InputStream stream = connection.getInputStream();
@@ -231,7 +233,8 @@ JSONString=buffer.toString();
                     e.printStackTrace();
                 }
             }
-            return null;
+            Log.d(TAG,"JSON - prezemen");
+            return JSONString;
         }
 
       /*  @Override
